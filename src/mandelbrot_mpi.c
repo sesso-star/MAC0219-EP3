@@ -124,10 +124,9 @@ void init (int argc, char *argv[]) {
 void update_rgb_buffer (int iteration, int x, int y) {
     int color;
     if (iteration == iteration_max) {
-        color = 16;
-        image_buffer[(i_y_max * y) + x][0] = color;
-        image_buffer[(i_y_max * y) + x][1] = color;
-        image_buffer[(i_y_max * y) + x][2] = color;
+        image_buffer[(i_y_max * y) + x][0] = colors[gradient_size][0];
+        image_buffer[(i_y_max * y) + x][1] = colors[gradient_size][1];
+        image_buffer[(i_y_max * y) + x][2] = colors[gradient_size][2];
     }
     else {
         color = iteration % gradient_size;
@@ -169,10 +168,13 @@ void receive_and_compute (MANDELBROT_CHUNK *chunks) {
     int *escape_iterations;
     while (theres_work) {
         MPI_Status status;
-        int i, chunk_size;
+        int i, chunk_size, chunk_start;
         int tag = MANDELBROT_TAG;
+
+        /*printf ("[%d] is trying to receive a chunk to calculate...\n", world_rank);*/
         MPI_Recv (&i, 1, MPI_INT, MASTER_RANK, tag, MPI_COMM_WORLD,
                 &status);
+        /*printf ("[%d] received chunk %d\n", world_rank, i);*/
 
         if (i == END_WORK_CODE) {
             theres_work = 0;
@@ -181,8 +183,19 @@ void receive_and_compute (MANDELBROT_CHUNK *chunks) {
 
         escape_iterations = compute_mandelbrot_chunk (chunks[i]);
         chunk_size = chunks[i].size;
-        MPI_Send (&escape_iterations, chunk_size, MPI_UNSIGNED_CHAR,
+        chunk_start = chunks[i].start_index;
+
+        for (i = 0; i < chunk_size; i++) {
+            int i_x, i_y;
+            i_x = (chunk_start + i) % i_x_max;
+            i_y = (chunk_start + i) / i_x_max;
+            /*printf ("[escape_iterations] i_x = %d; i_y = %d  -- iteration: %d\n", i_x, i_y, escape_iterations[i]);*/
+        }
+
+        /*printf ("[%d] is trying to send chunk %d\n", world_rank, i);*/
+        MPI_Send (escape_iterations, chunk_size, MPI_INT,
                 MASTER_RANK, tag, MPI_COMM_WORLD);
+        /*printf ("[%d] just sent calculated chunk %d\n", world_rank, i);*/
         free (escape_iterations);
     }
 }
@@ -196,18 +209,19 @@ void distribute_work (MANDELBROT_CHUNK *chunks, int nchunks) {
     int end_msg = END_WORK_CODE;
     int *assigned_chunks = malloc (world_size * sizeof (int));
 
-    printf ("Distributing work\n");
+    /*printf ("[master] Distributing work...\n");*/
     // First we should send chunks to every processor
     for (worker = 0; worker < world_size; worker++) {
         if (worker != MASTER_RANK) {
             MPI_Send (&sent_chunks, 1, MPI_INT, worker, tag, 
                     MPI_COMM_WORLD);
+            /*printf ("[master] sent chunk %d to processor %d\n", sent_chunks, worker);*/
             assigned_chunks[worker] = sent_chunks++;
         }
         if (sent_chunks >= nchunks) break;
     }
 
-    printf ("Done with first batch... now waiting to receive and send new jobs\n");
+    /*printf ("[master] Done with first batch... now waiting to receive and send new jobs\n");*/
     // Now everytime any processor finish a chunk we should send
     // another
     while (received_chunks < nchunks) {
@@ -216,18 +230,21 @@ void distribute_work (MANDELBROT_CHUNK *chunks, int nchunks) {
         if (sent_chunks < nchunks) {
             MPI_Send (&sent_chunks, 1, MPI_INT, worker, tag, 
                     MPI_COMM_WORLD);
+            /*printf ("[master] sent chunk %d to processor %d\n", sent_chunks, worker);*/
             assigned_chunks[worker] = sent_chunks++;
         }
         else {
             MPI_Send (&end_msg, 1, MPI_INT, worker, tag, 
                     MPI_COMM_WORLD);
+            /*printf ("[master] sent end_code to processor %d\n", worker);*/
             sent_chunks++;
         }
     }
 
     // We should signal every processor that the job is done
-    while (sent_chunks < nchunks + world_size) {
+    while (sent_chunks < nchunks + world_size - 1) {
         MPI_Send (&end_msg, 1, MPI_INT, worker, tag, MPI_COMM_WORLD);
+        /*printf ("[master] sent end_code to processor %d\n", worker);*/
         sent_chunks++;
     }
 }
@@ -239,22 +256,28 @@ int pull_computed_chunk (MANDELBROT_CHUNK *chunks,
     int src_rank, i_x, i_y, i;
     int tag = MANDELBROT_TAG;
     MPI_Status status;
-    unsigned char *buf = malloc (world_size * sizeof (max_chunk_size));
+    int *buf;
+    buf = malloc (max_chunk_size * sizeof (int));
 
-    MPI_Recv (&buf, max_chunk_size, MPI_UNSIGNED_CHAR, 
+    int number_amount;
+
+    MPI_Recv (buf, max_chunk_size, MPI_INT, 
             MPI_ANY_SOURCE, tag, MPI_COMM_WORLD, &status);
 
     src_rank = status.MPI_SOURCE;
     ck = chunks[assigned_chunks[src_rank]];
-    printf ("Received chunk %d from procesor %d\n", src_rank, assigned_chunks[src_rank]);
+    /*printf ("[master] Received chunk %d from procesor %d\n", assigned_chunks[src_rank], src_rank);*/
+    MPI_Get_count(&status, MPI_INT, &number_amount);
+    /*printf ("message has size %d\n", number_amount);*/
     for (i = 0; i < ck.size; i++) {
         i_y = (i + ck.start_index) / i_x_max;
         i_x = (i + ck.start_index) % i_x_max;
-        printf ("a\n");
+        /*printf ("[buf] i_x = %d; i_y = %d  -- iteration: %d\n", i_x, i_y, buf[i]);*/
+        /*printf ("from (%d, %d) => %d\n", i_x, i_y, buf[i]);*/
         update_rgb_buffer (buf[i], i_x, i_y);
-        printf ("b\n");
     }
 
+    free (buf);
     return src_rank;
 }
 
@@ -267,6 +290,7 @@ int *compute_mandelbrot_chunk (MANDELBROT_CHUNK ck) {
     int *escape_iterations = malloc (ck.size * sizeof (int));
     chunk_start = ck.start_index;
     chunk_end = chunk_start + ck.size;
+    /*printf ("-----Computing chunk------\n");*/
     for (i = chunk_start; i < chunk_end; i++) {
         int idx = i - chunk_start;
         i_y = i / i_x_max;
@@ -277,6 +301,8 @@ int *compute_mandelbrot_chunk (MANDELBROT_CHUNK ck) {
             c_y = 0.0;
         };
         iteration = escape_iteration (c_x, c_y);
+        /*printf ("i_x = %d; i_y = %d  -- iteration: %d\n", i_x, i_y, iteration);*/
+        /*printf ("(%d, %d) --> (%lf, %lf)\n", i_x, i_y, c_x, c_y);*/
         escape_iterations[idx] = iteration;
     }
     return escape_iterations;
@@ -332,7 +358,9 @@ int main (int argc, char *argv[]) {
 
     if (world_rank == MASTER_RANK) {
         write_to_file ();
+        /*printf ("Wrote image\n");*/
         free_image_buffer ();
     }
-    return 0;
+
+    MPI_Finalize ();
 };
