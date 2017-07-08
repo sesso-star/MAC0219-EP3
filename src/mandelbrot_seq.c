@@ -153,7 +153,6 @@ void compute_mandelbrot(){
                 z_y_squared = z_y * z_y;
             };
 
-            printf ("i_x = %d; i_y = %d  -- iteration: %d\n", i_x, i_y, iteration);
             update_rgb_buffer(iteration, i_x, i_y);
         };
     };
