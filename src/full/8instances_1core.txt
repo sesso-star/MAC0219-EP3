@@ -1,15 +1,16 @@
- Performance counter stats for 'mpirun -n 1 --hostfile hostfile ./a.out -2.5 1.5 -2.0 2.0 11500' (10 runs):
 
-       5522.701346      task-clock (msec)         #    0.871 CPUs utilized            ( +-  5.52% )
-            48,753      context-switches          #    0.009 M/sec                    ( +- 61.50% )
-                 0      cpu-migrations            #    0.000 K/sec
-           907,445      page-faults               #    0.164 M/sec                    ( +-  0.00% )
-   <not supported>      cycles
-   <not supported>      stalled-cycles-frontend
-   <not supported>      stalled-cycles-backend
-   <not supported>      instructions
-   <not supported>      branches
-   <not supported>      branch-misses
+ Performance counter stats for 'mpirun -n 8 --hostfile 8host ./a.out -2.5 1.5 -2.0 2.0 11500' (10 runs):
 
-       6.342734289 seconds time elapsed                                          ( +-  7.15% )
+     135864.970976      task-clock (msec)         #    0.960 CPUs utilized            ( +-  0.08% )
+               629      context-switches          #    0.005 K/sec                    ( +-  2.87% )
+                19      cpu-migrations            #    0.000 K/sec                    ( +-  5.48% )
+         1,296,184      page-faults               #    0.010 M/sec                    ( +-  0.00% )
+   <not supported>      cycles                   
+   <not supported>      stalled-cycles-frontend  
+   <not supported>      stalled-cycles-backend   
+   <not supported>      instructions             
+   <not supported>      branches                 
+   <not supported>      branch-misses            
+
+     141.486828297 seconds time elapsed                                          ( +-  0.09% )
 

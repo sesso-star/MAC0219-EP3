@@ -1,40 +1,10 @@
---------------------------------------------------------------------------
-mpirun noticed that process rank 0 with PID 3701 on node my-instance-1 exited on signal 9 (Killed).
---------------------------------------------------------------------------
---------------------------------------------------------------------------
-mpirun noticed that process rank 0 with PID 3706 on node my-instance-1 exited on signal 9 (Killed).
---------------------------------------------------------------------------
---------------------------------------------------------------------------
-mpirun noticed that process rank 0 with PID 3710 on node my-instance-1 exited on signal 9 (Killed).
---------------------------------------------------------------------------
---------------------------------------------------------------------------
-mpirun noticed that process rank 0 with PID 3714 on node my-instance-1 exited on signal 9 (Killed).
---------------------------------------------------------------------------
---------------------------------------------------------------------------
-mpirun noticed that process rank 0 with PID 3719 on node my-instance-1 exited on signal 9 (Killed).
---------------------------------------------------------------------------
---------------------------------------------------------------------------
-mpirun noticed that process rank 0 with PID 3723 on node my-instance-1 exited on signal 9 (Killed).
---------------------------------------------------------------------------
---------------------------------------------------------------------------
-mpirun noticed that process rank 0 with PID 3727 on node my-instance-1 exited on signal 9 (Killed).
---------------------------------------------------------------------------
---------------------------------------------------------------------------
-mpirun noticed that process rank 0 with PID 3731 on node my-instance-1 exited on signal 9 (Killed).
---------------------------------------------------------------------------
---------------------------------------------------------------------------
-mpirun noticed that process rank 0 with PID 3736 on node my-instance-1 exited on signal 9 (Killed).
---------------------------------------------------------------------------
---------------------------------------------------------------------------
-mpirun noticed that process rank 0 with PID 3740 on node my-instance-1 exited on signal 9 (Killed).
---------------------------------------------------------------------------
 
- Performance counter stats for 'mpirun -n 4 --hostfile 2host ./a.out -0.8 -0.7 0.05 0.15 11500' (10 runs):
+ Performance counter stats for 'mpirun -n 8 --hostfile 2host ./a.out -0.8 -0.7 0.05 0.15 11500' (10 runs):
 
-      11842.954297      task-clock (msec)         #    0.782 CPUs utilized            ( +-  6.37% )
-           263,263      context-switches          #    0.022 M/sec                    ( +- 30.01% )
-                 0      cpu-migrations            #    0.000 K/sec                  
-           907,848      page-faults               #    0.077 M/sec                    ( +-  0.00% )
+     217676.354185      task-clock (msec)         #    3.471 CPUs utilized            ( +-  0.11% )
+               679      context-switches          #    0.003 K/sec                    ( +-  1.20% )
+                22      cpu-migrations            #    0.000 K/sec                    ( +-  5.02% )
+         1,297,243      page-faults               #    0.006 M/sec                    ( +-  0.00% )
    <not supported>      cycles                   
    <not supported>      stalled-cycles-frontend  
    <not supported>      stalled-cycles-backend   
@@ -42,5 +12,5 @@ mpirun noticed that process rank 0 with PID 3740 on node my-instance-1 exited on
    <not supported>      branches                 
    <not supported>      branch-misses            
 
-      15.146429960 seconds time elapsed                                          ( +-  8.60% )
+      62.719087212 seconds time elapsed                                          ( +-  0.13% )
 

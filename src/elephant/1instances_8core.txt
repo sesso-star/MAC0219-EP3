@@ -1,49 +1,10 @@
---------------------------------------------------------------------------
-WARNING: A process refused to die!
-
-Host: my-instance-1
-PID:  3885
-
-This process may still be running and/or consuming resources.
-
---------------------------------------------------------------------------
---------------------------------------------------------------------------
-mpirun noticed that process rank 0 with PID 3883 on node my-instance-1 exited on signal 9 (Killed).
---------------------------------------------------------------------------
---------------------------------------------------------------------------
-mpirun noticed that process rank 0 with PID 3900 on node my-instance-1 exited on signal 9 (Killed).
---------------------------------------------------------------------------
---------------------------------------------------------------------------
-mpirun noticed that process rank 0 with PID 3935 on node my-instance-1 exited on signal 9 (Killed).
---------------------------------------------------------------------------
---------------------------------------------------------------------------
-mpirun noticed that process rank 0 with PID 3964 on node my-instance-1 exited on signal 9 (Killed).
---------------------------------------------------------------------------
---------------------------------------------------------------------------
-mpirun noticed that process rank 0 with PID 3973 on node my-instance-1 exited on signal 9 (Killed).
---------------------------------------------------------------------------
---------------------------------------------------------------------------
-mpirun noticed that process rank 0 with PID 3984 on node my-instance-1 exited on signal 9 (Killed).
---------------------------------------------------------------------------
---------------------------------------------------------------------------
-mpirun noticed that process rank 0 with PID 3994 on node my-instance-1 exited on signal 9 (Killed).
---------------------------------------------------------------------------
---------------------------------------------------------------------------
-mpirun noticed that process rank 0 with PID 4015 on node my-instance-1 exited on signal 9 (Killed).
---------------------------------------------------------------------------
---------------------------------------------------------------------------
-mpirun noticed that process rank 0 with PID 4032 on node my-instance-1 exited on signal 9 (Killed).
---------------------------------------------------------------------------
---------------------------------------------------------------------------
-mpirun noticed that process rank 0 with PID 4068 on node my-instance-1 exited on signal 9 (Killed).
---------------------------------------------------------------------------
 
  Performance counter stats for 'mpirun -n 8 --hostfile 1host ./a.out 0.175 0.375 -0.1 0.1 11500' (10 runs):
 
-      40844.578658      task-clock (msec)         #    0.917 CPUs utilized            ( +-  4.21% )
-        31,416,788      context-switches          #    0.769 M/sec                    ( +-  3.16% )
-                 0      cpu-migrations            #    0.000 K/sec                  
-           898,427      page-faults               #    0.022 M/sec                    ( +-  0.13% )
+     298040.611155      task-clock (msec)         #    6.523 CPUs utilized            ( +-  0.33% )
+             3,714      context-switches          #    0.012 K/sec                    ( +- 49.81% )
+                31      cpu-migrations            #    0.000 K/sec                    ( +-  6.37% )
+         1,301,395      page-faults               #    0.004 M/sec                    ( +-  0.00% )
    <not supported>      cycles                   
    <not supported>      stalled-cycles-frontend  
    <not supported>      stalled-cycles-backend   
@@ -51,5 +12,5 @@ mpirun noticed that process rank 0 with PID 4068 on node my-instance-1 exited on
    <not supported>      branches                 
    <not supported>      branch-misses            
 
-      44.519876790 seconds time elapsed                                          ( +-  5.65% )
+      45.692540397 seconds time elapsed                                          ( +-  0.30% )
 
