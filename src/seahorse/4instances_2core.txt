@@ -1,0 +1,46 @@
+--------------------------------------------------------------------------
+mpirun noticed that process rank 0 with PID 3516 on node my-instance-1 exited on signal 9 (Killed).
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+mpirun noticed that process rank 0 with PID 3519 on node my-instance-1 exited on signal 9 (Killed).
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+mpirun noticed that process rank 0 with PID 3522 on node my-instance-1 exited on signal 9 (Killed).
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+mpirun noticed that process rank 0 with PID 3525 on node my-instance-1 exited on signal 9 (Killed).
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+mpirun noticed that process rank 0 with PID 3529 on node my-instance-1 exited on signal 9 (Killed).
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+mpirun noticed that process rank 0 with PID 3532 on node my-instance-1 exited on signal 9 (Killed).
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+mpirun noticed that process rank 0 with PID 3552 on node my-instance-1 exited on signal 9 (Killed).
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+mpirun noticed that process rank 0 with PID 3584 on node my-instance-1 exited on signal 9 (Killed).
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+mpirun noticed that process rank 0 with PID 3587 on node my-instance-1 exited on signal 9 (Killed).
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+mpirun noticed that process rank 0 with PID 3590 on node my-instance-1 exited on signal 9 (Killed).
+--------------------------------------------------------------------------
+
+ Performance counter stats for 'mpirun -n 2 --hostfile 4host ./a.out -0.8 -0.7 0.05 0.15 11500' (10 runs):
+
+       5841.588602      task-clock (msec)         #    0.837 CPUs utilized            ( +-  5.31% )
+            96,750      context-switches          #    0.017 M/sec                    ( +- 52.67% )
+                 0      cpu-migrations            #    0.000 K/sec                  
+           907,379      page-faults               #    0.155 M/sec                    ( +-  0.01% )
+   <not supported>      cycles                   
+   <not supported>      stalled-cycles-frontend  
+   <not supported>      stalled-cycles-backend   
+   <not supported>      instructions             
+   <not supported>      branches                 
+   <not supported>      branch-misses            
+
+       6.977293084 seconds time elapsed                                          ( +-  7.49% )
+
