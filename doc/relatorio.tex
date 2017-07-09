@@ -7,6 +7,7 @@
 \usepackage{amssymb}
 \usepackage{amsthm}
 \usepackage{graphicx}    % needed for include graphics
+\usepackage{graphics}
 \usepackage{subfigure}   % add subfigures
 \usepackage{indentfirst}
 \usepackage{float}       % needed for [H] figure placement option
@@ -178,9 +179,74 @@ distribuindo os blocos de pixels para as máquinas escravas:
 \EndFunction
 \end{algorithmic}
 
+\subsection{Experimentos}
+Para verificar como o nosso algoritmo se comporta, decidimos rodar 
+instâncias do problema para diferentes situações de processamento 
+paralelo usando OpenMPI. Mantemos o número total de cores em 8, variando
+o número de máquinas de 1 até 8. Medimos o tempo de execução para 
+instâncias de tamanho 11500x11500 nas regiões Full, Elephant, Seahorse e
+Spiral.
+
+\begin{table}[ht] 
+    \begin{center} 
+    \begin{tabular}{@{}lc cc@{}} 
+        \multicolumn{4}{c}{Tempo de execução médio (segundos)}\\
+        \hline
+        \hline
+        Experimento && Full & Elephant \\
+        \hline
+        1 instância com 8 cores &&  
+                                    23,49 ($\pm$ 0,60\%) &  
+                                    45,69 ($\pm$ 0,30\%) \\ 
+        2 instâncias com 4 cores && 
+                                    23,97 ($\pm$ 0,28\%) &
+                                    60,27 ($\pm$ 0,17\%) \\
+        4 instâncias com 2 cores && 
+                                    33,99 ($\pm$ 0,52\%) &
+                                    91,67 ($\pm$ 0,14\%) \\
+        8 instâncias com 1 core && 
+                                   141,48 ($\pm$ 0,09\%) &
+                                   203,58 ($\pm$ 0,91\%) \\
+
+        \hline
+        Experimento && Seahorse & Tripple  Spiral \\
+        \hline
+        1 instância com 8 cores &&
+                                    47,20 ($\pm$ 0.18\%) & 
+                                    51,64 ($\pm$ 0,24\%) \\
+        2 instâncias com 4 cores && 
+                                    62,71 ($\pm$ 0,13\%) &
+                                    69,02 ($\pm$ 0,14\%) \\
+        4 instâncias com 2 cores && 
+                                    92,70 ($\pm$ 1,19\%) &
+                                    100,58 ($\pm$ 0,14\%) \\
+        8 instâncias com 1 core && 
+                                   176,16 ($\pm$ 0,08\%) &
+                                   218,60 ($\pm$ 0,10\%) \\
+        \hline
+        \hline
+    \end{tabular} \caption{Resultados de tempo de execução para 
+        implementação em OpenMPI pra imagens de $11500^2$ pixels.}
+        \label{tabela:openmpi}
+    \end{center} 
+\end{table}
+
+Como podemos observar na tabela \ref{tabela:openmpi} quanto mais 
+máquinas usamos, maior é o tempo de execução de nosso programa. Isso 
+acontece porque quando usamos mais máquinas precisamos fazer 
+comunicações pela rede durante a execução do programa, o que é mais 
+lento do que acessar diretamente a memória.
+
+Um cuidado que não tomamos durante nossa implementação, e que poderia
+resultar em um desempenho melhor mesmo com mais máquinas, é evitar fazer
+trocas de mensagens no código. Nossa implementação imita a melhor 
+implementação de pthreads feita no EP1, onde utilizamos uma divisão
+dinâmica de trabalho, porém, esse tipo de implementação em OpenMPI 
+implica em um número maior de troca de mensagens quando comparado a uma
+implementação com divisão de trabalho estática.
+
 \newpage
 \section{Conclusão}
 
 \newpage
-
 \end{document}
